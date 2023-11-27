@@ -22,7 +22,7 @@ resource "aws_autoscaling_schedule" "sclae_in_at_night" {
 }
 
 module "webserver_cluster" {
-  source = "../../../modules/services/webserver-cluster"
+  source = "github.com/savak1990/test-multirep-deployment-webserver?ref=v0.0.1"
 
   cluster_name = "webservers-prod"
   db_remote_state_bucket = "vklovan-terraform-up-and-running-state"

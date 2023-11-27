@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "database" {
-  source = "../../../modules/data-stores/mysql"
+  source = "github.com/savak1990/test-multirep-deployment-data?ref=v0.0.1"
 
   db_identifier_prefix = "vklovan-terraform-prod-"
   db_name = "ProdTerraformExample"
