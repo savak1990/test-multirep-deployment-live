@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 module "webserver_cluster" {
-  source = "github.com/savak1990/test-multirep-deployment-webserver?ref=v0.0.1"
+  source = "github.com/savak1990/test-multirep-deployment-webserver?ref=v0.0.2"
 
   cluster_name = "webservers-stage"
   db_remote_state_bucket = "vklovan-terraform-up-and-running-state"
