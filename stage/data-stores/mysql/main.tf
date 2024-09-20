@@ -11,42 +11,13 @@ provider "aws" {
   }
 }
 
-provider "aws" {
-  region = "eu-west-1"
-  alias  = "replica"
-
-  default_tags {
-    tags = {
-      ManagedBy = "terraform"
-      Env       = "stage"
-      Project   = "multirep"
-    }
-  }
-}
-
 module "database" {
   source = "github.com/savak1990/test-multirep-deployment-data?ref=v0.0.4"
 
-  providers = {
-    aws = aws.primary
-  }
-
-  db_identifier_prefix    = "vklovan-terraform-stage-"
-  db_name                 = "StageTerraformExample"
-  db_username             = var.db_username
-  db_password             = var.db_password
-  backup_retention_period = 1
-}
-
-module "replica" {
-  source = "github.com/savak1990/test-multirep-deployment-data?ref=v0.0.4"
-
-  providers = {
-    aws = aws.replica
-  }
-
   db_identifier_prefix = "vklovan-terraform-stage-"
-  replicate_source_db  = module.database.arn
+  db_name              = "StageTerraformExample"
+  db_username          = var.db_username
+  db_password          = var.db_password
 }
 
 terraform {
