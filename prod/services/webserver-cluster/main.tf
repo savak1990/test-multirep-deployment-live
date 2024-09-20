@@ -10,6 +10,21 @@ provider "aws" {
   }
 }
 
+locals {
+  db_remote_state_bucket = "vklovan-terraform-up-and-running-state"
+  db_remote_state_key    = "prod/data-stores/mysql/terraform.tfstate"
+}
+
+data "terraform_remote_state" "db" {
+  backend = "s3"
+
+  config = {
+    bucket = local.db_remote_state_bucket
+    key    = local.db_remote_state_key
+    region = "eu-central-1"
+  }
+}
+
 resource "aws_autoscaling_schedule" "scale_out_during_business_hours" {
   scheduled_action_name  = "scale_out_during_business_hours"
   autoscaling_group_name = module.webserver_cluster.asg_name
@@ -30,11 +45,14 @@ resource "aws_autoscaling_schedule" "sclae_in_at_night" {
 }
 
 module "webserver_cluster" {
-  source = "github.com/savak1990/test-multirep-deployment-webserver?ref=v0.0.1"
+  source = "github.com/savak1990/test-multirep-deployment-webserver?ref=v0.0.10"
 
-  cluster_name           = "webservers-prod"
-  db_remote_state_bucket = "vklovan-terraform-up-and-running-state"
-  db_remote_state_key    = "prod/data-stores/mysql/terraform.tfstate"
+  server_text = "Merry Christmas"
+
+  cluster_name = "webservers-prod"
+
+  db_address = data.terraform_remote_state.db.outputs.primary_address
+  db_port    = data.terraform_remote_state.db.outputs.primary_port
 
   instance_type = "t2.micro"
   min_size      = 3
