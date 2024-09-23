@@ -1,6 +1,10 @@
 provider "aws" {
   region = "eu-central-1"
 
+  assume_role {
+    role_arn = "arn:aws:iam::474668381860:role/OrganizationAccountAccessRole"
+  }
+
   default_tags {
     tags = {
       ManagedBy = "terraform"
@@ -60,6 +64,12 @@ module "webserver_cluster" {
 }
 
 terraform {
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.0"
+    }
+  }
   backend "s3" {
     bucket         = "vklovan-terraform-up-and-running-state"
     key            = "prod/services/webserver-cluster/terraform.tfstate"
